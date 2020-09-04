@@ -497,9 +497,9 @@ class Homepg(tk.Frame):
 
 ###################################################################################################################################################### ADD STUDENT
 class Add_Student(tk.Frame):
-    def __init__(self):
-        #tk.Frame.__init__(self, window)
-        self.window = Tk()
+    def __init__(self, window):
+        tk.Frame.__init__(self, window)
+        self.window = window
         self.add_frame = Frame(self.window, bg="#f9fafc", relief=GROOVE, borderwidth=0)
         self.add_frame.place(x=435, y=160, width=600, height=630)
 
@@ -633,35 +633,35 @@ class Add_Student(tk.Frame):
             all_course.append(i)
         self.course_combo["values"] = all_course
 
-    def add_student(self,fname, lname, course, mobile, email, gender, dob, address, country):
-        # fname = self.fname_entry.get()
-        # lname = self.lname_entry.get()
-        # course = self.course_combo.get()
-        # mobile = self.mobile_entry.get()
-        # email = self.email_entry.get()
-        # gender = self.gender.get()
-        # dob = self.cal_date.get()
-        # address = self.address_entry.get()
-        # country = self.country.get()
+    def add_student(self):
+        fname = self.fname_entry.get()
+        lname = self.lname_entry.get()
+        course = self.course_combo.get()
+        mobile = self.mobile_entry.get()
+        email = self.email_entry.get()
+        gender = self.gender.get()
+        dob = self.cal_date.get()
+        address = self.address_entry.get()
+        country = self.country.get()
 
         if (fname == "") or (lname == "") or (course == "Select Course") or (mobile == "") or (email == "") or (
                 gender == "") or (dob == "") or (country == ""):
-            #messagebox.showerror("Notification", "Please Fill all the fields!")
+            messagebox.showerror("Notification", "Please Fill all the fields!")
             return False
         else:
             try:
                 qry = "INSERT INTO students_info(first_name, last_name, course, mobile, email, gender, dob, address, country) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                 values = (fname, lname, course, mobile, email, gender, dob, address, country)
                 self.my_db.aur(qry, values)
-                return True
-                #messagebox.showinfo("Notification", "Student {} Added Successfully..".format(fname))
+                messagebox.showinfo("Notification", "Student {} Added Successfully..".format(fname))
                 self.add_frame.destroy()
                 self.window.switch_frame(Add_Student)
+                return True
 
 
             except Exception as abc:
                 print(abc)
-                #messagebox.showerror("Notification", "Mobile Number already exists!")
+                messagebox.showerror("Notification", "Mobile Number already exists!")
                 return False
 
     def cancel(self):
@@ -784,9 +784,9 @@ class Add_Course(tk.Frame):
 
 ###################################################################################################################################################### UPDATE STUDENT
 class Update_Student(tk.Frame):
-    def __init__(self):
-        #tk.Frame.__init__(self, window)
-        self.window = Tk()
+    def __init__(self,window):
+        tk.Frame.__init__(self, window)
+        self.window = window
         self.update_frame = Frame(self.window, bg="#f9fafc", relief=GROOVE, borderwidth=0)
         self.update_frame.place(x=130, y=150, width=1300, height=630)
 
@@ -1048,23 +1048,23 @@ class Update_Student(tk.Frame):
                 except:
                     messagebox.showerror("Notification", "Mobile Number already exists!")
 
-    def remove_student(self, update_index):
-        if update_index == "":
-            #messagebox.showerror("Error", "Please select the student first")
+    def remove_student(self):
+        if self.update_index == "":
+            messagebox.showerror("Error", "Please select the student first")
             return False
         else:
             fname = self.fname_entry.get()
             qry = "DELETE FROM students_info WHERE id = %s"
-            values = (update_index,)
+            values = (self.update_index,)
             self.my_db.aur(qry, values)
+            messagebox.showinfo("Notification", "Student {} Removed Successfully..".format(fname))
+            self.show_all_student()
             return True
-            #messagebox.showinfo("Notification", "Student {} Removed Successfully..".format(fname))
-            #self.show_all_student()
 
-    def search(self,searched_value):
+    def search(self):
         qry = "SELECT id FROM students_info"
         all_id = self.my_db.show_data(qry)
-        #searched_value = self.search_entry.get()
+        searched_value = self.search_entry.get()
         ids = []
         for i in all_id:
             ids.append(i[0])
@@ -1079,7 +1079,7 @@ class Update_Student(tk.Frame):
 
             return True
         else:
-            #messagebox.showerror("Notification", "No student found with that ID")
+            messagebox.showerror("Notification", "No student found with that ID")
             return False
 
     def select_data(self, event):
@@ -2191,5 +2191,5 @@ class Fee_History(tk.Frame):
 
 
 
-# run = Main()
-# run.mainloop()
+run = Main()
+run.mainloop()
